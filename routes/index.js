@@ -3,16 +3,58 @@ const passport = require('passport');
 const passwordUtils = require('../lib/passwordUtils');
 const connection = require('../config/database');
 const User = connection.models.User;
+const bcrypt = require("bcrypt");
 
 /**
  * -------------- POST ROUTES ----------------
  */
 
  // TODO
- router.post('/login', (req, res, next) => {});
+ //just add passport middleware for logging in where that will be checked and id will be stored in session-cookie
+ router.post('/login', 
+ passport.authenticate('local', 
+ {failureRedirect: '/login', successRedirect: '/protected-route' }) ,
+  (req, res, next) => {
+    //if no any successredirect then control would come here
+    console.log(req.body);
+    return res.json({'name':'subhash'});
+ });
 
  // TODO
- router.post('/register', (req, res, next) => {});
+ router.post('/register', (req, res, next) => {
+     const saltRounds = 4;
+     bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+        // Store hash in your password DB.
+        if(err){
+            console.log('error while storing hased password in database');
+        }
+        /*const data = new User({
+            username: req.body.username,
+            hash: hash,
+            salt: undefined
+        });*/
+
+        User.create({
+            username: req.body.username,
+            hash: hash,
+            salt: undefined
+        },function(err,user){
+           if(err){
+            console.log('error in registering');
+            return;
+           }
+
+           console.log('user',user);
+        })
+
+        //data.save();
+        //console.log(data);
+    });
+
+    console.log('user registration succesful!');
+    
+    return res.redirect('/login');
+ });
 
 
  /**

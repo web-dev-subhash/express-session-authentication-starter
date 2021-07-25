@@ -9,6 +9,7 @@ This repo has three branches:
 The `master` branch has a starter template for creating what is in the `final` branch.  The `final-all-in-one` is a single `app-all.js` file that functions completely alone, while the `final` branch is a refactored version of that.
 
 ## How to run the app
+_Make sure to run the `mongod` service before running the app locally_
 
 When you go to each branch, the `README.md` will show you how to start the app.
 
